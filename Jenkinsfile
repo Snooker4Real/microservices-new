@@ -8,6 +8,7 @@ pipeline {
                 echo "hello world"
             }
         }
+    }
 
     post {
         failure {
