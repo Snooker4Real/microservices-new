@@ -2,10 +2,36 @@ pipeline {
     agent any
 
     stages {
-        stage('hello') {
+        stage('Checkout') {
             steps {
                 // Checkout the code from the Git repository
-                echo "hello world"
+                checkout scm
+            }
+        }
+    }
+
+        stage('Branch Name Check') {
+            steps {
+                script {
+                    // Check if the branch name follows a specific pattern
+                    def branchName = env.BRANCH_NAME
+                    if (!branchName.matches('feature/.*')) {
+                        error "Branch name should start with 'feature/'"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                // Specify conditions to deploy (optional)
+                expression {
+                    return env.BRANCH_NAME == 'main'
+                }
+            }
+            steps {
+                // Deployment steps for the main branch
+                sh 'echo "Deploying to production"'
             }
         }
     }
